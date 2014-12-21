@@ -18,27 +18,55 @@
       <!-- template -->
       <script type="text/ng-template" id="items_renderer.html">
 	<div ui-tree-handle class="tree-node tree-node-content">
+	  <!-- toggle -->
 	  <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)">
 	    <span class="glyphicon" 
                   ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}">
 	    </span>
 	  </a>
-	  {{node.title}}
+	  <!-- checkbox -->
+	  <input type="checkbox" ng-model="node.done">
+	  <!-- content -->
+	  <span ng-class="{done: node.done}" ng-hide="node == editing">
+	    {{node.title}}
+	  </span>
+	  <input type="text"
+		 ng-show="node == editing"
+		 ng-model="node.title"
+		 ng-blur="doneEdit()">
+	  <!-- remove button -->
 	  <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)">
 	    <span class="glyphicon glyphicon-remove"></span>
 	  </a>
-	  <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)">
+	  <!-- add button -->
+	  <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="addSubItem(this)">
 	    <span class="glyphicon glyphicon-plus"></span>
 	  </a>
+	  <!-- edit button -->
+	  <a class="pull-right btn btn-info btn-xs" data-nodrag ng-click="startEdit(node)">
+	    <span class="glyphicon glyphicon-pencil"></span>
+	  </a>
+	  
 	</div>
 	<ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
 	  <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'items_renderer.html'"></li>
 	</ol>
       </script>
 
+      <!-- main content -->
       <h1 class="page-header">ToDo Tree</h1>
 
+
       <div ui-tree class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+
+	<form class="form-inline">
+	  <input ng-model="newitem" type="text" class="form-control" placeholder="enter new task">
+	  <button type="button" class="btn btn-primary" ng-click="addItem(newitem)">Create</button>
+	</form>
+
+	<br>
+
 	<ol ui-tree-nodes ng-model="data">
 	  <li ng-repeat="node in data" ui-tree-node ng-include="'items_renderer.html'"></li>
 	</ol>
